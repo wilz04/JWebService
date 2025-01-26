@@ -1,0 +1,44 @@
+import java.sql.ResultSet;
+
+public class WebService {
+  
+  public void addMatter(String n, String id, double note, String date) {
+    try {
+      MyConnection cx = new MyConnection();
+      cx.execute("insert into materiasaprobadas values('" + n + "','" + id + "'," + note +",'" + date + "')");
+    } catch (Exception e) {
+      System.out.println("WebService.addMatter: " + e.toString());
+    }
+  }
+  
+  public String getMatters(String id) {
+    try {
+      MyConnection cx = new MyConnection();
+      ResultSet rs = cx.executeQuery("select distinct materias.nombre from estudiante, materiasaprobadas, materias where estudiante.carnet = materiasaprobadas.carnet and materiasaprobadas.idmateria = materias.idmateria and estudiante.carnet = '" + id + "'");
+      String matters = "";
+      while (rs.next()) {
+        matters += rs.getString(1) + "\n";
+      }
+      return matters;
+    } catch (Exception e) {
+      System.out.println("WebService.addMatter: " + e.toString());
+      return null;
+    }
+  }
+  /*
+  public static void main(String args[]) {
+    WebService ws = new WebService();
+    //ws.addMatter("05", "1", 3, "4");
+    ResultSet rs = ws.getMatters("05");
+    //System.out.println(rs.toString());
+    try {
+      while (rs.next()) {
+        System.out.println(rs.getString(1));
+      }
+    } catch (Exception e) {
+      System.out.println("WebService.main: " + e.toString());
+    }
+    //ws.close();
+  }
+  */
+}
